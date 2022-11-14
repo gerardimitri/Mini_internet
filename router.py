@@ -25,14 +25,18 @@ def create_packet(IP_packet):
 # Checks all the routes
 # Line format: ip (from port) (until port) (destiny_ip) (destiny_port)
 def check_routes(route_file_name, destination_address):
+    global visited
     with open(route_file_name, "r") as route_file:
         for line in route_file:
             line = line.split(" ")
             if line[0] == destination_address[0]:
                 if int(line[1]) <= destination_address[1] and int(line[2]) >= destination_address[1]:
-                    return (line[3], int(line[4]))
+                    if line[3] in visited:
+                        continue
+                    else:
+                        visited.append(line[3])
+                        return (line[3], int(line[4]))
     return None
-
 
 IP_packet_v1 = "127.0.0.1,8881,hola".encode()
 parsed_IP_packet = parse_packet(IP_packet_v1)
